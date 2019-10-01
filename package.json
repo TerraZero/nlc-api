@@ -1,0 +1,27 @@
+{
+  "name": "nlc-serve",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TerraZero/nlc-serve.git"
+  },
+  "author": "TerraZero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TerraZero/nlc-serve/issues"
+  },
+  "homepage": "https://github.com/TerraZero/nlc-serve#readme",
+  "dependencies": {
+    "glob": "^7.1.4",
+    "nlc": "git+https://github.com/TerraZero/nlc.git",
+    "url-pattern": "^1.0.3"
+  },
+  "optionalDependencies": {
+    "express": "^4.17.1"
+  }
+}
