@@ -4,8 +4,9 @@ const Serve = require('../index');
 
 module.exports = class Register {
 
-  constructor() {
+  constructor(debug = false) {
     this._routes = null;
+    this._debug = debug;
   }
 
   /**
@@ -36,8 +37,8 @@ module.exports = class Register {
             const controller = require(file);
 
             for (const route in controller.getRoutes) {
-              this._routes.set(controller.key + '.' + route, {
-                route: controller.key + '.' + route,
+              this._routes.set(controller.controller + '.' + route, {
+                route: controller.controller + '.' + route,
                 method: route,
                 pattern: controller.getRoutes[route],
                 controller: controller,
@@ -53,6 +54,23 @@ module.exports = class Register {
   }
 
   /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @returns {Serve.Request}
+   */
+  async serve(req, res, next) {
+    const request = new Serve.Request(req, res, next);
+
+    try {
+      await this.execute(request);
+    } catch (e) {
+      request.setError(e).send(this._debug);
+    }
+    return request;
+  }
+
+  /**
    *
    * @param {Serve.Request} request
    * @returns {Promise}
@@ -64,13 +82,21 @@ module.exports = class Register {
       const match = definition.pattern.match(request.path);
 
       if (match !== null) {
-        const controller = new definition.controller(request);
+        const controller = new definition.controller(definition, request);
 
-        request.setMatch(match);
+        request.setMatch(definition, match);
         promises.push(controller[definition.method].call(controller, match));
       }
     }
-    return Promise.all(promises);
+
+    if (promises.length) {
+      return Promise.all(promises).then(() => request.send(this._debug));
+    }
+
+    if (request._next) {
+      request._next();
+    }
+    return Promise.resolve();
   }
 
   /**

@@ -5,7 +5,7 @@ module.exports = class Controller {
   /**
    * @returns {string}
    */
-  static key() {
+  static get controller() {
     return null;
   }
 
@@ -16,6 +16,9 @@ module.exports = class Controller {
     return {};
   }
 
+  /**
+   * @returns {Object<string, import('url-pattern')}
+   */
   static get getRoutes() {
     if (this._routes === undefined) {
       this._routes = this.routes;
@@ -24,10 +27,19 @@ module.exports = class Controller {
   }
 
   /**
+   * @param {Serve.RouteDefinition} route
    * @param {Serve.Request} request
    */
-  constructor(request) {
+  constructor(route, request) {
+    this._route = route;
     this._request = request;
+  }
+
+  /**
+   * @returns {Serve.RouteDefinition}
+   */
+  get route() {
+    return this._route;
   }
 
   /**
@@ -35,6 +47,24 @@ module.exports = class Controller {
    */
   get request() {
     return this._request;
+  }
+
+  /**
+   * @param {Object|Array|string} data
+   * @returns {this}
+   */
+  write(data = {}) {
+    this.request.write(this.route.route, data);
+    return this;
+  }
+
+  /**
+ * @param {any} data
+ * @returns {this}
+ */
+  debug(data) {
+    this.request.meta.get('debug')[this.route.route].push(data);
+    return this;
   }
 
 }
