@@ -60,6 +60,27 @@ module.exports = class Request {
   }
 
   /**
+   * @returns {NLC.sys.Bag}
+   */
+  get args() {
+    return this.bags.get('args');
+  }
+
+  /**
+   * @returns {NLC.sys.Bag}
+   */
+  get GET() {
+    return this.bags.get('GET');
+  }
+
+  /**
+   * @returns {NLC.sys.Bag}
+   */
+  get POST() {
+    return this.bags.get('POST');
+  }
+
+  /**
    * @param {import('../index').RouteDefinition} route
    * @param {Object} match
    * @returns {this}
@@ -89,6 +110,7 @@ module.exports = class Request {
 
   /**
    * @param {boolean} debug
+   * @returns {this}
    */
   send(debug = false) {
     const response = {
@@ -120,6 +142,7 @@ module.exports = class Request {
     }
 
     this.response.json(response);
+    return this;
   }
 
   /**

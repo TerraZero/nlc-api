@@ -57,17 +57,14 @@ module.exports = class Register {
    * @param {import('express').Request} req
    * @param {import('express').Response} res
    * @param {import('express').NextFunction} next
-   * @returns {Serve.Request}
+   * @returns {Promise<Serve.Request>}
    */
-  async serve(req, res, next) {
+  serve(req, res, next) {
     const request = new Serve.Request(req, res, next);
 
-    try {
-      await this.execute(request);
-    } catch (e) {
-      request.setError(e).send(this._debug);
-    }
-    return request;
+    return this.execute(request)
+      .then(() => request)
+      .catch((e) => request.setError(e).send(this._debug));
   }
 
   /**
