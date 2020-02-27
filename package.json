@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "localdev uninstall T:/projects nlc-util",
+    "postinstall": "localdev install T:/projects nlc-util"
   },
   "repository": {
     "type": "git",
@@ -17,11 +19,13 @@
   },
   "homepage": "https://github.com/TerraZero/nlc-serve#readme",
   "dependencies": {
-    "glob": "^7.1.4",
-    "nlc": "git+https://github.com/TerraZero/nlc.git",
     "url-pattern": "^1.0.3"
   },
   "optionalDependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "socket.io-client": "^2.3.0"
   }
 }

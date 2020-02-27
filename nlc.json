@@ -1,3 +1,46 @@
 {
-  "serve": "src/**/*.controller.js"
+  "services": {
+    "nlc.serve": {
+      "class": "src/ServeManager",
+      "lazy": true,
+      "arguments": [
+        "@nlc.core",
+        "@nlc.serve.controller.collection"
+      ]
+    },
+    "nlc.serve.controller.collection": {
+      "factory": {
+        "class": "@nlc.util.collection.factory",
+        "method": "create"
+      },
+      "arguments": [
+        "controllers/*.js",
+        true
+      ],
+      "tags": [
+        {
+          "name": "lazy"
+        },
+        {
+          "name": "collection"
+        }
+      ]
+    },
+    "nlc.serve.driver.express": {
+      "class": "src/express/ExpressDriver",
+      "tags": [
+        {
+          "name": "driver"
+        }
+      ]
+    },
+    "nlc.serve.driver.socket": {
+      "class": "src/socket/SocketDriver",
+      "tags": [
+        {
+          "name": "driver"
+        }
+      ]
+    }
+  }
 }

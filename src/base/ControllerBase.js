@@ -1,6 +1,6 @@
-const Serve = require('../index');
+import 'nlc-serve/types';
 
-module.exports = class Controller {
+export default class ControllerBase {
 
   /**
    * @returns {string}
@@ -19,7 +19,7 @@ module.exports = class Controller {
   /**
    * @returns {Object<string, import('url-pattern')}
    */
-  static get getRoutes() {
+  static getRoutes() {
     if (this._routes === undefined) {
       this._routes = this.routes;
     }
@@ -27,8 +27,8 @@ module.exports = class Controller {
   }
 
   /**
-   * @param {Serve.RouteDefinition} route
-   * @param {Serve.Request} request
+   * @param {T_RouteDefinition} route
+   * @param {import('nlc-serve/src/base/RequestBase').default} request
    */
   constructor(route, request) {
     this._route = route;
@@ -36,14 +36,14 @@ module.exports = class Controller {
   }
 
   /**
-   * @returns {Serve.RouteDefinition}
+   * @returns {T_RouteDefinition}
    */
   get route() {
     return this._route;
   }
 
   /**
-   * @returns {Serve.Request}
+   * @returns {import('nlc-serve/src/base/RequestBase').default}
    */
   get request() {
     return this._request;

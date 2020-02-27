@@ -1,22 +1,14 @@
-const NLC = require('nlc');
+import 'nlc-serve/types';
 
-module.exports = class Request {
+import Bag from 'nlc-util/src/data/Bag';
+import BagCollection from 'nlc-util/src/data/BagCollection';
 
-  /**
-   * @param {import('express').Request} request
-   * @param {import('express').Response} response
-   * @param {import('express').NextFunction} next
-   */
-  constructor(request, response, next) {
-    this._request = request;
-    this._response = response;
-    this._next = next;
+export default class RequestBase {
 
-    this._bags = new NLC.sys.BagCollection('data');
-    this._bags.addBag('data', new NLC.sys.Bag());
-    this._bags.addBag('args', new NLC.sys.Bag());
-    this._bags.addBag('GET', new NLC.sys.Bag(request.query));
-    this._bags.addBag('POST', new NLC.sys.Bag(request.body));
+  constructor(data) {
+    this._bags = new BagCollection('data');
+    this._bags.addBag('data', new Bag(data));
+    this._bags.addBag('args', new Bag());
 
     this._error = null;
     this._meta = new Map();
@@ -25,31 +17,10 @@ module.exports = class Request {
   }
 
   /**
-   * @returns {import('express').Request}
-   */
-  get request() {
-    return this._request;
-  }
-
-  /**
-   * @returns {import('express').Response}
-   */
-  get response() {
-    return this._response;
-  }
-
-  /**
-   * @returns {NLC.sys.BagCollection}
+   * @returns {BagCollection}
    */
   get bags() {
     return this._bags;
-  }
-
-  /**
-   * @returns {string}
-   */
-  get path() {
-    return this.request.path;
   }
 
   /**
@@ -60,28 +31,12 @@ module.exports = class Request {
   }
 
   /**
-   * @returns {NLC.sys.Bag}
+   * @returns {string}
    */
-  get args() {
-    return this.bags.get('args');
-  }
+  getUrl() { }
 
   /**
-   * @returns {NLC.sys.Bag}
-   */
-  get GET() {
-    return this.bags.get('GET');
-  }
-
-  /**
-   * @returns {NLC.sys.Bag}
-   */
-  get POST() {
-    return this.bags.get('POST');
-  }
-
-  /**
-   * @param {import('../index').RouteDefinition} route
+   * @param {T_RouteDefinition} route
    * @param {Object} match
    * @returns {this}
    */
@@ -141,9 +96,11 @@ module.exports = class Request {
       }
     }
 
-    this.response.json(response);
+    this.doSend(response);
     return this;
   }
+
+  doSend(response) { }
 
   /**
    * @param {Error} error
